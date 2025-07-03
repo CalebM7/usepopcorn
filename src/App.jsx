@@ -48,10 +48,12 @@ const tempWatchedData = [
 ];
 
 export default function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+
   return (
     <>
-      <NavBar />
-      <Main />
+      <NavBar movies={movies} />
+      <Main movies={movies} />
     </>
   );
 }
@@ -59,12 +61,12 @@ export default function App() {
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-function NavBar() {
+function NavBar({ movies }) {
   return (
     <nav className="nav-bar">
       <Search />
       <Logo />
-      <NumResults />
+      <NumResults movies={movies} />
     </nav>
   );
 }
@@ -78,10 +80,12 @@ function Logo() {
   );
 }
 
-function NumResults() {
-  <p className="num-results">
-    Found <strong>X</strong> results
-  </p>;
+function NumResults({ movies }) {
+  return (
+    <p className="num-results">
+      Found <strong>{movies.length}</strong> results
+    </p>
+  );
 }
 
 function Search() {
@@ -98,16 +102,16 @@ function Search() {
   );
 }
 
-function Main() {
+function Main({ movies }) {
   return (
     <main className="main">
-      <ListBox />
+      <ListBox movies={movies} />
       <WatchedBox />
     </main>
   );
 }
 
-function ListBox() {
+function ListBox({ movies }) {
   const [isOpen1, setIsOpen1] = useState(true);
 
   return (
@@ -118,14 +122,12 @@ function ListBox() {
       >
         {isOpen1 ? '–' : '+'}
       </button>
-      {isOpen1 && <MovieList />}
+      {isOpen1 && <MovieList movies={movies} />}
     </div>
   );
 }
 
-function MovieList() {
-  const [movies, setMovies] = useState(tempMovieData);
-
+function MovieList({ movies }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (
@@ -215,22 +217,22 @@ function WatchedMoviesList({ watched }) {
 function WatchedMovie({ movie }) {
   return (
     <li>
-          <img src={movie.Poster} alt={`${movie.Title} poster`} />
-          <h3>{movie.Title}</h3>
-          <div>
-            <p>
-              <span>⭐️</span>
-              <span>{movie.imdbRating}</span>
-            </p>
-            <p>
-              <span>🌟</span>
-              <span>{movie.userRating}</span>
-            </p>
-            <p>
-              <span>⏳</span>
-              <span>{movie.runtime} min</span>
-            </p>
-          </div>
-        </li>
-  )
+      <img src={movie.Poster} alt={`${movie.Title} poster`} />
+      <h3>{movie.Title}</h3>
+      <div>
+        <p>
+          <span>⭐️</span>
+          <span>{movie.imdbRating}</span>
+        </p>
+        <p>
+          <span>🌟</span>
+          <span>{movie.userRating}</span>
+        </p>
+        <p>
+          <span>⏳</span>
+          <span>{movie.runtime} min</span>
+        </p>
+      </div>
+    </li>
+  );
 }
