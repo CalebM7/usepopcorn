@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
 
 const tempMovieData = [
@@ -47,9 +48,17 @@ const tempWatchedData = [
   },
 ];
 
+const KEY = '4398cd9';
+
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
+  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
+
+  useEffect(function() {
+    fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=shrek `)
+    .then((res) => res.json())
+    .then((data) => setMovies(data.Search));
+  }, [])
 
   return (
     <>
@@ -72,9 +81,9 @@ export default function App() {
           <MovieList movies={movies} />
         </Box>
 
-        <Box>  
+        <Box>
           <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} /> 
+          <WatchedMoviesList watched={watched} />
         </Box>
       </Main>
     </>
