@@ -48,18 +48,24 @@ const tempWatchedData = [
   },
 ];
 
+const average = (arr) =>
+  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+
 const KEY = '4398cd9';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
   const query = 'shrek';
 
   useEffect(function () {
     async function fetchMovies() {
+      setIsLoading(true);
       const res = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${query} `);
       const data = await res.json();
       setMovies(data.Search);
+      setIsLoading(false);
     }
     fetchMovies()
   }, []);
@@ -71,18 +77,8 @@ export default function App() {
         <NumResults movies={movies} />
       </NavBar>
       <Main>
-        {/* <Box element={<MovieList movies={movies} />} />
-        <Box
-          element={
-            <>
-              <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} />
-            </>
-          }
-        /> */}
-
         <Box>
-          <MovieList movies={movies} />
+          {isLoading ? <Loader /> : <MovieList movies={movies} />}
         </Box>
 
         <Box>
@@ -94,8 +90,12 @@ export default function App() {
   );
 }
 
-const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+function Loader() {
+  return <p className="loader">Loading...</p>;
+}
+
+
+
 
 function NavBar({ children }) {
   return (
